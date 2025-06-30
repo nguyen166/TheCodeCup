@@ -25,6 +25,7 @@ val DividerColor= Color(0xFFD8D8D8)
 
 val TextMuted=Color(0x00183338);
 
+val TextGrey=Color(0xFF757575);
 
 
 val White = Color.White

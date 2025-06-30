@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <!-- Theme chính của ứng dụng bạn -->
+  <style name="Theme.TheCodeCup" parent="android:Theme.Material.Light.NoActionBar" />
 
-    <style name="Theme.TheCodeCup" parent="android:Theme.Material.Light.NoActionBar" />
+  <!-- === THÊM THEME MỚI CHO SPLASH SCREEN === -->
+  <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+    <!-- Màu nền của màn hình chờ -->
+    <item name="windowSplashScreenBackground">@color/splash_background</item>
+
+    <!-- Icon hiển thị ở giữa. Đây là drawable của bạn -->
+    <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+
+    <!-- (Tùy chọn) Thời gian hiển thị của icon -->
+    <item name="windowSplashScreenAnimationDuration">1000</item>
+
+    <!-- Màn hình sẽ chuyển sang theme nào sau khi splash kết thúc -->
+    <item name="postSplashScreenTheme">@style/Theme.TheCodeCup</item>
+  </style>
 </resources>

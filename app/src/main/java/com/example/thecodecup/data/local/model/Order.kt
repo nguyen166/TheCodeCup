@@ -11,5 +11,6 @@ data class Order(
     val timestamp: Long,
     val status: String,
    //Dung Json cho don gian
-    val itemsJson: String
+    val itemsJson: String,
+    val pointEarn: Int
 )

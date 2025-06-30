@@ -66,13 +66,15 @@ fun TheCodeCupTheme(
 
 
 data class ExtendedColors(
-    val textMuted: Color
+    val textMuted: Color,
+    val textGrey: Color
 )
 
 
 val LocalExtendedColors = staticCompositionLocalOf {
     ExtendedColors(
-        textMuted = Color.Unspecified
+        textMuted = Color.Unspecified,
+        textGrey = Color.Unspecified
     )
 }
 
@@ -86,7 +88,8 @@ fun TheCodeCupTheme(
 
 
     val extendedColors = ExtendedColors(
-        textMuted = TextMuted // Gán màu #AAAAAA
+        textMuted = TextMuted, // Gán màu #AAAAAA
+        textGrey = TextGrey // Gán màu #757575
     )
 
 
