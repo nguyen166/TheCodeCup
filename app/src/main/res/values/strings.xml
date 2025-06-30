@@ -1,0 +1,120 @@
+<resources>
+  <string name="app_name"> The Code Cup</string>
+  <string name="splash_screen_brand_name">Ordinary Coffee House</string>
+
+  <!-- Thanh điều hướng dưới (Bottom Navigation Bar) -->
+  <string name="bottom_nav_home">Home</string>
+  <string name="bottom_nav_rewards">Rewards</string>
+  <string name="bottom_nav_orders">Orders</string>
+  <string name="bottom_nav_profile">Profile</string>
+
+
+  <!-- Màn hình Home -->
+  <string name="home_greeting">Good morning</string>
+  <string name="home_loyalty_card_title">Loyalty card</string>
+  <string name="home_choose_coffee_title">Choose your coffee</string>
+
+  <string name="home_loyalty_status_format">%d / %d</string>
+
+
+  <!-- Tên các món cà phê -->
+  <string name="coffee_name_americano">Americano</string>
+  <string name="coffee_name_cappuccino">Cappuccino</string>
+  <string name="coffee_name_mocha">Mocha</string>
+  <string name="coffee_name_flat_white">Flat White</string>
+  <string name="coffee_name_latte">Cafe Latte</string>
+  <string name="coffee_name_green_tea_latte">Green Tea Latte</string>
+
+  <!-- Màn hình Chi tiết sản phẩm (Details) -->
+  <string name="details_screen_title">Details</string>
+  <string name="details_option_shot">Shot</string>
+  <string name="details_shot_single">Single</string>
+  <string name="details_shot_double">Double</string>
+  <string name="details_option_select">Select</string>
+  <string name="details_option_size">Size</string>
+  <string name="details_option_ice">Ice</string>
+  <string name="details_total_amount_label">Total Amount</string>
+  <string name="details_add_to_cart_button">Add to cart</string>
+
+  <!-- Màn hình Chi tiết sản phẩm (Details) - Kích thước & tùy chọn -->
+  <string name="details_size_small">Small</string>
+  <string name="details_size_medium">Medium</string>
+  <string name="details_size_large">Large</string>
+
+  <string name="details_ice_option_no_ice">No Ice</string>
+  <string name="details_ice_option_less_ice">Less Ice</string>
+  <string name="details_ice_option_full_ice">Full Ice</string>
+
+  <string name="details_select_hot">Hot</string>
+  <string name="details_select_iced">Iced</string>
+
+
+
+
+  <!-- Màn hình Giỏ hàng (My Cart) -->
+  <string name="cart_screen_title">My Cart</string>
+  <string name="cart_total_price_label">Total Price</string>
+  <string name="cart_checkout_button">Checkout</string>
+  <!-- Dùng để format chuỗi "x1", "x2",... -->
+  <string name="cart_item_quantity_format">x%d</string>
+
+
+  <!-- Màn hình Đặt hàng thành công (Order Success) -->
+  <string name="order_success_title">Order Success</string>
+  <string name="order_success_message">Your order has been placed successfully.\nFor more details, go to my orders.</string>
+  <string name="order_success_track_button">Track My Order</string>
+
+
+  <!-- Màn hình Đơn hàng của tôi (My Orders) -->
+  <string name="my_orders_screen_title">My Order</string>
+  <string name="my_orders_tab_ongoing">On going</string>
+  <string name="my_orders_tab_history">History</string>
+
+
+  <!-- Màn hình Phần thưởng (Rewards) -->
+  <string name="rewards_screen_title">Rewards</string>
+  <string name="rewards_my_points_label">My Points:</string>
+  <string name="rewards_redeem_button">Redeem drinks</string>
+  <string name="rewards_history_title">History Rewards</string>
+  <!-- Dùng để format chuỗi "+ 12 Pts" -->
+  <string name="rewards_points_earned_format">+ %d Pts</string>
+
+
+  <!-- Màn hình Đổi thưởng (Redeem) -->
+  <string name="redeem_screen_title">Redeem</string>
+  <!-- Dùng để format chuỗi "Valid until 04.07.21" -->
+  <string name="redeem_valid_until_format">Valid until %s</string>
+  <!-- Dùng để format chuỗi "1340 pts" trong nút bấm -->
+  <string name="redeem_points_cost_format">%d pts</string>
+
+
+  <!-- Màn hình Hồ sơ (Profile) -->
+  <string name="profile_screen_title">Profile</string>
+  <string name="profile_label_full_name">Full name</string>
+  <string name="profile_label_phone_number">Phone number</string>
+  <string name="profile_label_email">Email</string>
+  <string name="profile_label_address">Address</string>
+
+
+  <!-- Mô tả nội dung (Content Descriptions) cho mục đích hỗ trợ tiếp cận (Accessibility) -->
+  <string name="cd_back_button">Back</string>
+  <string name="cd_cart_button">View Cart</string>
+  <string name="cd_profile_button">View Profile</string>
+  <string name="cd_edit_button">Edit</string>
+  <string name="cd_coffee_image">Image of %s</string> <!-- %s là tên món cà phê -->
+  <string name="cd_increase_quantity">Increase quantity</string>
+  <string name="cd_decrease_quantity">Decrease quantity</string>
+
+
+  <!-- Trạng thái trống (Empty States) -->
+  <string name="cart_empty_message">Your cart is empty. Let\'s add some coffee!</string>
+  <string name="orders_empty_message">You have no orders yet.</string>
+
+  <!-- Hộp thoại (Dialogs) -->
+  <string name="dialog_confirm_title">Confirm</string>
+  <string name="dialog_cancel_button">Cancel</string>
+  <string name="dialog_ok_button">OK</string>
+  <string name="dialog_remove_item_message">Are you sure you want to remove this item from your cart?</string>
+  <string name="dialog_redeem_item_message">Redeem %s for %d points?</string> <!-- Redeem Americano for 1340 points? -->
+
+</resources>
