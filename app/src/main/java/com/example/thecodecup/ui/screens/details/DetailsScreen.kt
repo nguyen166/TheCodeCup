@@ -25,6 +25,7 @@ import com.example.thecodecup.ui.components.OptionRow
 import com.example.thecodecup.ui.components.QuantitySelector
 import com.example.thecodecup.ui.components.SelectableButton
 import com.example.thecodecup.ui.components.SelectableIconButton
+import com.example.thecodecup.ui.screens.profile.ProfileViewModel
 import com.example.thecodecup.ui.theme.AppTheme
 import com.example.thecodecup.ui.theme.TheCodeCupTheme
 
@@ -42,11 +43,15 @@ data class DetailsState(
 
 @Composable
 fun DetailsRoute(
-    viewModel: DetailsViewModel = hiltViewModel(), // Lấy ViewModel từ Hilt
+    viewModel: DetailsViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel=hiltViewModel(),
     onBackClick: () -> Unit,
     onNavigateToCart: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val profileUiState by profileViewModel.uiState.collectAsStateWithLifecycle()
+
+    val address= profileUiState.userProfile?.address ?: ""
 
     if (uiState.isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -72,7 +77,7 @@ fun DetailsRoute(
             onTypeChange = viewModel::onTypeChange,
             onSizeChange = viewModel::onSizeChange,
             onIceChange = viewModel::onIceChange,
-            onAddToCart = { viewModel.addToCart(onCartSuccess = onNavigateToCart) },
+            onAddToCart = { viewModel.addToCart(userAddress = address,onCartSuccess = onNavigateToCart) },
             onBackClick = onBackClick,
             onCartClick = onNavigateToCart
         )

@@ -26,28 +26,26 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.rememberSwipeToDismissBoxState
-import com.example.thecodecup.ui.screens.profile.ProfileViewModel
 
 private val previewCartItems = listOf(
-    CartItem(1, 1, "Cappuccino", 3.0, 1, "medium", "single", "full ice", R.drawable.americano),
-    CartItem(2, 1, "Cappuccino", 3.0, 1, "medium", "single", "full ice", R.drawable.capuchino),
-    CartItem(3, 1, "Cappuccino", 3.0, 1, "medium", "single", "full ice", R.drawable.flatwhite)
+    CartItem(1, 1, "Cappuccino", 3.0, 1, "medium", "single", "full ice", R.drawable.americano,"unknown"),
+    CartItem(2, 1, "Cappuccino", 3.0, 1, "medium", "single", "full ice", R.drawable.capuchino,"unknown"),
+    CartItem(3, 1, "Cappuccino", 3.0, 1, "medium", "single", "full ice", R.drawable.flatwhite,"unknown")
 )
 private val previewTotalPrice = 9.0
 
 @Composable
 fun CartRoute(
     viewModel: CartViewModel = hiltViewModel(),
-    profileViewModel: ProfileViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
     onNavigateToOrderSuccess: () -> Unit
 ) {
     // Lấy state thật từ ViewModel
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val profileUiState by profileViewModel.uiState.collectAsStateWithLifecycle()
+    val address = uiState.cartItems.firstOrNull()?.address ?: ""
 
-    val address= profileUiState.userProfile?.address ?: ""
+
 
     // Gọi Composable UI (stateless) với dữ liệu và sự kiện thật
     CartScreen(
@@ -55,13 +53,13 @@ fun CartRoute(
         totalPrice = uiState.totalPrice,
         onBackClick = onBackClick,
         onCheckoutClick = {
-
             viewModel.onCheckoutClicked(userAddress =address,onCheckoutSuccess = onNavigateToOrderSuccess)
         },
         onRemoveItem = { itemToRemove ->
             viewModel.removeItem(
+                userAddress =  itemToRemove.address,
                 itemToRemove = itemToRemove,
-                userAddress =  address
+
             )
         }
     )

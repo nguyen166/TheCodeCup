@@ -14,5 +14,6 @@ data class CartItem(
     val size: String, // "S", "M", "L"
     val shot: String, // "Single", "Double"
     val ice: String,  // "None", "Some", "Full"
-    val imageResId: Int // Lưu ID của drawable để hiển thị lại
+    val imageResId: Int, // Lưu ID của drawable để hiển thị lại
+    val address: String
 )
