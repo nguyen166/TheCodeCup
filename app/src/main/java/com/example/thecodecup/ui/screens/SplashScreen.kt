@@ -43,10 +43,10 @@ fun SplashScreen(
             painter = painterResource(id = R.drawable.splash),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop // Crop để ảnh lấp đầy màn hình
+            contentScale = ContentScale.Crop
         )
 
-        // Nội dung ở giữa (Icon và Tên thương hiệu)
+      
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -55,7 +55,7 @@ fun SplashScreen(
                 painter = painterResource(id = R.drawable.ic_splash_logo),
                 contentDescription = null,
                 modifier = Modifier.size(100.dp),
-                tint = Color.White // Icon màu trắng để nổi bật trên nền tối
+                tint = Color.White
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
@@ -63,7 +63,7 @@ fun SplashScreen(
                 color = Color.White,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.alpha(0.9f) // Hơi mờ một chút cho đẹp
+                modifier = Modifier.alpha(0.9f)
             )
         }
     }

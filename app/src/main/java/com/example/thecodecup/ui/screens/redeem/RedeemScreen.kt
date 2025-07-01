@@ -1,21 +1,26 @@
 package com.example.thecodecup.ui.screens.redeem
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.thecodecup.R
 import com.example.thecodecup.ui.components.RedeemItemRow
 import com.example.thecodecup.ui.theme.AppTheme
 import com.example.thecodecup.ui.theme.TheCodeCupTheme
+import androidx.compose.runtime.getValue
 
-// Dữ liệu giả cho việc xây dựng UI
+
 // Đây cũng là một UI Model, không cần lưu vào CSDL
 data class RedeemableItem(
     val id: Int,
@@ -30,6 +35,30 @@ private val previewRedeemableItems = listOf(
     RedeemableItem(2, "Flat White", R.drawable.flatwhite, "04.07.21", 1340),
     RedeemableItem(3, "Cappuccino", R.drawable.capuchino, "04.07.21", 1340)
 )
+
+@Composable
+fun RedeemRoute(
+    viewModel: RedeemViewModel = hiltViewModel(),
+    onBackClick: () -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    RedeemScreen(
+        items = uiState.items,
+        onRedeemClick = { itemId ->
+            viewModel.redeemItem(itemId) { isSuccess ->
+                if (isSuccess) {
+                    Toast.makeText(context, "Redeemed successfully!", Toast.LENGTH_SHORT).show()
+                    onBackClick() // Quay lại màn hình Rewards
+                } else {
+                    Toast.makeText(context, "Not enough points!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        },
+        onBackClick = onBackClick
+    )
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)

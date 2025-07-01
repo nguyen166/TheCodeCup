@@ -30,10 +30,10 @@ fun OrderSuccessScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Spacer để đẩy nội dung lên một chút, không bị căn giữa tuyệt đối
+
             Spacer(modifier = Modifier.weight(1f))
 
-            // Icon lớn ở giữa
+
             Icon(
                 painter = painterResource(id = R.drawable.ic_order_success),
                 contentDescription = null, // Icon này chỉ mang tính trang trí
@@ -43,7 +43,7 @@ fun OrderSuccessScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Tiêu đề "Order Success"
+
             Text(
                 text = stringResource(id = R.string.order_success_title),
                 style = AppTheme.typography.headlineLarge,

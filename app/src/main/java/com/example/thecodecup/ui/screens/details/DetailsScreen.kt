@@ -3,7 +3,6 @@ package com.example.thecodecup.ui.screens.details
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -19,6 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.thecodecup.R
 import com.example.thecodecup.ui.components.OptionRow
 import com.example.thecodecup.ui.components.QuantitySelector
@@ -38,6 +39,46 @@ data class DetailsState(
     val ice: String = "Some",    // "None", "Some", "Full"
     val totalPrice: Double = 3.00
 )
+
+@Composable
+fun DetailsRoute(
+    viewModel: DetailsViewModel = hiltViewModel(), // Lấy ViewModel từ Hilt
+    onBackClick: () -> Unit,
+    onNavigateToCart: () -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    if (uiState.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+    } else {
+        // Chuyển đổi DetailsUiState thành DetailsState mà UI cần
+        val detailsState = DetailsState(
+            name = uiState.coffee?.name ?: "Unknown",
+            imageRes = uiState.coffee?.imageRes ?: R.drawable.ic_size, //khi bi loi null khong co image res
+            quantity = uiState.quantity,
+            shot = uiState.selectedShot,
+            type = uiState.selectedType,
+            size = uiState.selectedSize,
+            ice = uiState.selectedIce,
+            totalPrice = uiState.totalPrice
+        )
+
+        DetailsScreen(
+            state = detailsState,
+            onQuantityChange = viewModel::onQuantityChange,
+            onShotChange = viewModel::onShotChange,
+            onTypeChange = viewModel::onTypeChange,
+            onSizeChange = viewModel::onSizeChange,
+            onIceChange = viewModel::onIceChange,
+            onAddToCart = { viewModel.addToCart(onCartSuccess = onNavigateToCart) },
+            onBackClick = onBackClick,
+            onCartClick = onNavigateToCart
+        )
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -149,13 +190,13 @@ fun DetailsScreen(
             }
 
             OptionRow(title = stringResource(id = R.string.details_option_size)) {
-                SelectableIconButton(iconRes = R.drawable.ic_size, contentDescription = "Size S", isSelected = state.size == "S", onClick = { onSizeChange("S") },iconModifier = Modifier.size(24.dp) )
-                SelectableIconButton(iconRes = R.drawable.ic_size, contentDescription = "Size M", isSelected = state.size == "M", onClick = { onSizeChange("M")},iconModifier = Modifier.size(30.dp) )
-                SelectableIconButton(iconRes = R.drawable.ic_size, contentDescription = "Size L", isSelected = state.size == "L", onClick = { onSizeChange("L")},iconModifier = Modifier.size(48.dp)  )
+                SelectableIconButton(iconRes = R.drawable.ic_size, contentDescription = "Size S", isSelected = state.size == "S", onClick = { onSizeChange("S") },iconModifier = Modifier.size(15.dp) )
+                SelectableIconButton(iconRes = R.drawable.ic_size, contentDescription = "Size M", isSelected = state.size == "M", onClick = { onSizeChange("M")},iconModifier = Modifier.size(18.dp) )
+                SelectableIconButton(iconRes = R.drawable.ic_size, contentDescription = "Size L", isSelected = state.size == "L", onClick = { onSizeChange("L")},iconModifier = Modifier.size(32.dp)  )
             }
 
             OptionRow(title = stringResource(id = R.string.details_option_ice)) {
-                SelectableIconButton(iconRes = R.drawable.ic_ice1, contentDescription = "No Ice", isSelected = state.ice == "None", onClick = { onIceChange("None") },iconModifier = Modifier.size(24.dp))
+                SelectableIconButton(iconRes = R.drawable.ic_ice1, contentDescription = "No Ice", isSelected = state.ice == "None", onClick = { onIceChange("None") },iconModifier = Modifier.size(16.dp))
                 SelectableIconButton(iconRes = R.drawable.ic_ice2, contentDescription = "Some Ice", isSelected = state.ice == "Some", onClick = { onIceChange("Some") },iconModifier = Modifier.size(48.dp))
                 SelectableIconButton(iconRes = R.drawable.ic_ice3, contentDescription = "Full Ice", isSelected = state.ice == "Full", onClick = { onIceChange("Full") },iconModifier = Modifier.size(72.dp))
             }

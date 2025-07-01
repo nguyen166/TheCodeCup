@@ -17,39 +17,57 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thecodecup.R
 import com.example.thecodecup.ui.components.CoffeeMenuItem
-import com.example.thecodecup.ui.components.LoyaltyCard // Sử dụng LoyaltyCard đã được sửa chính xác
+import com.example.thecodecup.ui.components.LoyaltyCard
 import com.example.thecodecup.ui.theme.AppTheme
 import com.example.thecodecup.ui.theme.TheCodeCupTheme
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.runtime.getValue
+import androidx.navigation.NavController
+import androidx.navigation.Navigator
+import com.example.thecodecup.data.local.model.Coffee
+import com.example.thecodecup.data.local.model.staticCoffeeList
+import com.example.thecodecup.ui.components.AppBottomBar
 
-// Dữ liệu giả để xây dựng UI
-data class Coffee(val id: Int, val name: String, val imageRes: Int)
 
-private val previewCoffeeList = listOf(
-    Coffee(1, "Americano", R.drawable.americano),
-    Coffee(2, "Cappuccino", R.drawable.capuchino),
-    Coffee(3, "Mocha", R.drawable.mocha),
-    Coffee(4, "Flat White", R.drawable.flatwhite)
-)
+@Composable
+fun HomeScreen(
+    viewModel: HomeViewModel,
+    onCoffeeClick: (Int) -> Unit,
+    onCartClick: () -> Unit,
+    onProfileClick: () -> Unit,
+    navController: NavController
+) {
+    // Lấy state từ ViewModel
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    HomeScreenContent(
+        userName = uiState.userName,
+        stamps = uiState.stamps,
+        coffeeList = uiState.coffeeList,
+        onCoffeeClick = onCoffeeClick,
+        onCartClick = onCartClick,
+        onProfileClick = onProfileClick,
+        navController = navController
+    )
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    // Các tham số đầu vào cho màn hình
+fun HomeScreenContent(
     userName: String,
     stamps: Int,
     coffeeList: List<Coffee>,
     onCoffeeClick: (Int) -> Unit,
     onCartClick: () -> Unit,
     onProfileClick: () -> Unit,
-    // Thêm các callback cho bottom nav sau này
+    navController: NavController
 ) {
     Scaffold(
-        // Nền của Scaffold sẽ là màu trắng ngà
+
         containerColor = AppTheme.colorScheme.background,
         topBar = {
-            // TopAppBar có nền trong suốt để hoà vào nền của Scaffold
             TopAppBar(
                 title = {
                     Column(modifier = Modifier.padding(start = 8.dp)) {
@@ -60,7 +78,7 @@ fun HomeScreen(
                         )
                         Text(
                             text = userName,
-                            style = AppTheme.typography.titleLarge, // Điều chỉnh nếu cần
+                            style = AppTheme.typography.titleLarge,
                             color = AppTheme.colorScheme.onBackground
                         )
                     }
@@ -86,9 +104,8 @@ fun HomeScreen(
                 )
             )
         },
-        // TODO: Thêm bottomBar ở Giai đoạn 3
         bottomBar = {
-            // Giả lập Bottom Nav Bar
+            AppBottomBar(navController=navController)
         }
     ) { paddingValues ->
 
@@ -102,10 +119,10 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f) // Chiếm hết không gian còn lại
+                    .weight(1f)
                     .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                    .background(AppTheme.colorScheme.surfaceVariant) // Nền màu xanh đen
-                    .padding(top = 24.dp, start = 16.dp, end = 16.dp) // Padding cho toàn bộ khối
+                    .background(AppTheme.colorScheme.surfaceVariant)
+                    .padding(top = 24.dp, start = 16.dp, end = 16.dp)
             ) {
                 // 1. LoyaltyCard nằm BÊN TRONG, ngay đầu tiên
                 LoyaltyCard(stamps = stamps, totalStamps = 8)
@@ -141,17 +158,26 @@ fun HomeScreen(
     }
 }
 
-@Preview(showSystemUi = true, device = "id:pixel_5")
-@Composable
-fun HomeScreenPreview() {
-    TheCodeCupTheme {
-        HomeScreen(
-            userName = "Anderson",
-            stamps = 4,
-            coffeeList = previewCoffeeList,
-            onCoffeeClick = {},
-            onCartClick = {},
-            onProfileClick = {}
-        )
-    }
-}
+// Dữ liệu giả để xây dựng UI
+
+
+
+
+
+//it have navcontroller so we not need preview for it later. ( if want to preview just remove navcontroller)
+
+//@Preview(showSystemUi = true, device = "id:pixel_5")
+//@Composable
+//fun HomeScreenPreview() {
+//    TheCodeCupTheme {
+//        HomeScreenContent(
+//            userName = "Anderson",
+//            stamps = 4,
+//            coffeeList = staticCoffeeList,
+//            onCoffeeClick = {},
+//            onCartClick = {},
+//            onProfileClick = {}
+//
+//        )
+//    }
+//}

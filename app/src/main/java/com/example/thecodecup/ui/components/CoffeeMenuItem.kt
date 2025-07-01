@@ -34,12 +34,11 @@ fun CoffeeMenuItem(
     // Card chỉ đóng vai trò là container với bo góc và xử lý click
     Card(
         modifier = modifier
-            .aspectRatio(0.8f) // Tỷ lệ chiều rộng/chiều cao để thẻ trông dài hơn một chút
+            .aspectRatio(0.8f)
             .clickable(onClick = onClick),
-        shape = AppTheme.shapes.large, // RoundedCornerShape(24.dp)
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // Thêm chút bóng đổ
+        shape = AppTheme.shapes.large,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        // Box cho phép xếp chồng các thành phần
         Box(modifier = Modifier.fillMaxSize()) {
             // 1. Lớp dưới cùng: Hình ảnh
             Image(
@@ -72,7 +71,7 @@ fun CoffeeMenuItem(
                 style = AppTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 color = Color.White,
                 modifier = Modifier
-                    .align(Alignment.BottomStart) // Căn chỉnh ở góc dưới bên trái
+                    .align(Alignment.BottomStart)
                     .padding(16.dp)
             )
         }

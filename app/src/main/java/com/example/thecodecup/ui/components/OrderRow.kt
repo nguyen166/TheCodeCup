@@ -13,6 +13,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thecodecup.R
+import com.example.thecodecup.data.local.model.Order
+import com.example.thecodecup.ui.screens.myorder.formatOrderTimestamp
 import com.example.thecodecup.ui.theme.AppTheme
 import com.example.thecodecup.ui.theme.TheCodeCupTheme
 import java.text.NumberFormat
@@ -20,14 +22,12 @@ import java.util.*
 
 @Composable
 fun OrderRow(
-    // Chúng ta sẽ cần một cách để lấy tên các món hàng từ đơn hàng
-    // Hiện tại, hãy truyền vào một danh sách tên
-    itemNames: List<String>,
-    date: String,
-    address: String,
-    price: Double,
+    order: Order,
     modifier: Modifier = Modifier
 ) {
+    val itemNames = order.items.map { "${it.name} (x${it.quantity})" }
+    val dateString = formatOrderTimestamp(order.timestamp)
+    val price = order.totalPrice
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -39,7 +39,7 @@ fun OrderRow(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = date,
+                text = dateString,
                 style = AppTheme.typography.bodySmall,
                 color = AppTheme.extendedColors.textMuted
             )
@@ -85,7 +85,7 @@ fun OrderRow(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = address,
+                text = order.address,
                 style = AppTheme.typography.bodyMedium,
                 color = AppTheme.colorScheme.onBackground
             )
@@ -98,17 +98,4 @@ private fun formatCurrency(price: Double): String {
     val format = NumberFormat.getCurrencyInstance(Locale("en", "US"))
     format.maximumFractionDigits = 2
     return format.format(price)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun OrderRowPreview() {
-    TheCodeCupTheme {
-        OrderRow(
-            itemNames = listOf("Americano", "Cafe Latte"),
-            date = "24 June | 12:30 PM",
-            address = "3 Addersion Court Chino Hills...",
-            price = 6.00
-        )
-    }
 }

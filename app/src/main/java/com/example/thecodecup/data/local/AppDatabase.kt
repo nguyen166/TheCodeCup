@@ -13,5 +13,5 @@ import com.example.thecodecup.data.local.model.*
 abstract class AppDatabase : RoomDatabase() {
     abstract fun cartDao(): CartDao
     abstract fun orderDao(): OrderDao
-    // abstract fun profileDao(): ProfileDao // them sau neu can
+    abstract fun profileDao(): UserProfileDao
 }

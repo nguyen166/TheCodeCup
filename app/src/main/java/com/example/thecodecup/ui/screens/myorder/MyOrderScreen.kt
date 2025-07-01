@@ -4,36 +4,45 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.thecodecup.R
 import com.example.thecodecup.data.local.model.Order
+import com.example.thecodecup.ui.components.AppBottomBar
 import com.example.thecodecup.ui.components.OrderRow
 import com.example.thecodecup.ui.theme.AppTheme
 import com.example.thecodecup.ui.theme.TheCodeCupTheme
 
-// Dữ liệu giả
-private val previewOngoingOrders = listOf(
-    Order(1, 6.0, System.currentTimeMillis(), "ongoing", "[{\"name\":\"Americano\"},{\"name\":\"Cafe Latte\"}]", 12),
-    Order(2, 3.0, System.currentTimeMillis() - 100000, "ongoing", "[{\"name\":\"Flat White\"}]", 12)
-)
-private val previewHistoryOrders = listOf(
-    Order(3, 3.0, System.currentTimeMillis() - 200000, "history", "[{\"name\":\"Cappuccino\"}]", 12),
-    Order(4, 3.0, System.currentTimeMillis() - 300000, "history", "[{\"name\":\"Mocha\"}]", 0) // Giả sử đơn hủy không có điểm
-)
 
+@Composable
+fun MyOrderRoute(
+    viewModel: MyOrdersViewModel = hiltViewModel(),
+    navController: NavController
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    MyOrderScreen(
+        ongoingOrders = uiState.ongoingOrders,
+        historyOrders = uiState.historyOrders,
+        navController = navController
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyOrderScreen(
     ongoingOrders: List<Order>,
     historyOrders: List<Order>,
-    // Thêm các callback event sau này
+    navController: NavController
 ) {
-    var selectedTabIndex by remember { mutableStateOf(0) }
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
     val tabs = listOf(
         stringResource(id = R.string.my_orders_tab_ongoing),
         stringResource(id = R.string.my_orders_tab_history)
@@ -45,6 +54,9 @@ fun MyOrderScreen(
                 title = { Text(text = stringResource(id = R.string.my_orders_screen_title)) },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = AppTheme.colorScheme.background)
             )
+        },
+        bottomBar = {
+            AppBottomBar(navController = navController)
         }
     ) { paddingValues ->
         Column(
@@ -70,31 +82,28 @@ fun MyOrderScreen(
                 contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 items(ordersToShow, key = { it.id }) { order ->
-                    // Logic giả để lấy tên item từ JSON
-                    // Ở GĐ 3, logic này sẽ nằm trong ViewModel
-                    val itemNames = listOf("Item from order ${order.id}") // Placeholder
 
                     OrderRow(
-                        itemNames = itemNames,
-                        date = "24 June | 12:30 PM", // Placeholder
-                        address = "3 Addersion Court Chino Hills...", // Placeholder
-                        price = order.totalPrice
+                        order = order,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    Divider(color = AppTheme.colorScheme.outline)
+                    HorizontalDivider(
+                        color = AppTheme.colorScheme.outline
+                    )
                 }
             }
         }
     }
 }
 
-
-@Preview(showSystemUi = true)
-@Composable
-fun MyOrderScreenPreview() {
-    TheCodeCupTheme {
-        MyOrderScreen(
-            ongoingOrders = previewOngoingOrders,
-            historyOrders = previewHistoryOrders
-        )
-    }
-}
+//the same as home
+//@Preview(showSystemUi = true)
+//@Composable
+//fun MyOrderScreenPreview() {
+//    TheCodeCupTheme {
+//        MyOrderScreen(
+//            ongoingOrders = previewOngoingOrders,
+//            historyOrders = previewHistoryOrders
+//        )
+//    }
+//}

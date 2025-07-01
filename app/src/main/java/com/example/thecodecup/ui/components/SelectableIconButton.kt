@@ -30,7 +30,7 @@ fun SelectableIconButton(
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier ,
-    iconModifier: Modifier = Modifier.size(28.dp)
+    iconModifier: Modifier = Modifier.size(16.dp)
 ) {
     val backgroundColor = if (isSelected) AppTheme.colorScheme.primary else AppTheme.colorScheme.background
     val iconColor = if (isSelected) AppTheme.colorScheme.outline else AppTheme.colorScheme.outline
@@ -38,12 +38,12 @@ fun SelectableIconButton(
 
     Box(
         modifier = modifier
-            .size(40.dp)
+            .size(44.dp)
             .clip(AppTheme.shapes.medium)
             .background(backgroundColor)
             .border(1.dp, borderColor, AppTheme.shapes.small)
             .clickable(onClick = onClick)
-            .padding(12.dp),
+            .padding(10.dp),
         contentAlignment = Alignment.Center
     ) {
         Icon(

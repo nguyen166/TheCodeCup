@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id( "kotlin-kapt")
     id( "dagger.hilt.android.plugin")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 
@@ -77,4 +78,5 @@ dependencies {
 
     implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(libs.kotlinx.serialization.json)
 }

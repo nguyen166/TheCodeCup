@@ -61,8 +61,8 @@ fun LoyaltyCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(AppTheme.shapes.medium) // Bo góc nhỏ hơn
-                    .background(AppTheme.colorScheme.background) // Nền màu trắng
+                    .clip(AppTheme.shapes.medium)
+                    .background(AppTheme.colorScheme.background)
                     .padding(horizontal = 8.dp, vertical = 12.dp),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
