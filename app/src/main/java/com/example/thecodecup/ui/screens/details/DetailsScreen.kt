@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,14 +47,59 @@ fun DetailsRoute(
     viewModel: DetailsViewModel = hiltViewModel(),
     profileViewModel: ProfileViewModel=hiltViewModel(),
     onBackClick: () -> Unit,
-    onNavigateToCart: () -> Unit
+    onNavigateToCart: () -> Unit,
+    onNavigateToProfile: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val profileUiState by profileViewModel.uiState.collectAsStateWithLifecycle()
 
-    val address= profileUiState.userProfile?.address ?: ""
+    var showProfileDialog by remember { mutableStateOf(false)}
 
-    if (uiState.isLoading) {
+        if (showProfileDialog) {
+            AlertDialog(
+                containerColor = AppTheme.colorScheme.surface,
+                shape = AppTheme.shapes.medium,
+                onDismissRequest = { showProfileDialog = false },
+                title = {
+                    Text(
+                        text = "Update Profile",
+                        style = AppTheme.typography.titleLarge,
+                        color = AppTheme.colorScheme.onSurface
+                    )
+                },
+                text = {
+                    Text(
+                        text = "Please update your address before adding items to the cart.",
+                        style = AppTheme.typography.bodyMedium,
+                        color = AppTheme.extendedColors.textGrey
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            showProfileDialog = false
+                            onNavigateToProfile()
+                        },
+
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = AppTheme.colorScheme.primary,
+                            contentColor = AppTheme.colorScheme.onPrimary
+                        )
+                    ) {
+                        Text("Go to Profile")
+                    }
+                },
+
+
+                dismissButton = {
+                    TextButton(onClick = { showProfileDialog = false }) {
+                        Text("Later", color = AppTheme.colorScheme.primary)
+                    }
+                }
+            )
+        }
+
+        if (uiState.isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
@@ -77,7 +123,14 @@ fun DetailsRoute(
             onTypeChange = viewModel::onTypeChange,
             onSizeChange = viewModel::onSizeChange,
             onIceChange = viewModel::onIceChange,
-            onAddToCart = { viewModel.addToCart(userAddress = address,onCartSuccess = onNavigateToCart) },
+            onAddToCart = {
+                val address= profileUiState.userProfile?.address ?: ""
+                if (address.isBlank() || address.equals("unknown", ignoreCase = true)) {
+                    showProfileDialog = true
+                } else {
+                    viewModel.addToCart(userAddress=address,onCartSuccess = onNavigateToCart)
+                }
+            },
             onBackClick = onBackClick,
             onCartClick = onNavigateToCart
         )
@@ -180,7 +233,10 @@ fun DetailsScreen(
                 )
             }
 
-            Divider(modifier = Modifier.padding(vertical = 16.dp), color = AppTheme.colorScheme.outline.copy(alpha = 0.5f))
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 16.dp),
+                color = AppTheme.colorScheme.outline.copy(alpha = 0.5f)
+            )
 
             // --- CÁC DÒNG TÙY CHỌN ---
 

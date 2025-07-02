@@ -83,7 +83,8 @@ fun AppNavigation() {
         ) {
             DetailsRoute(
                 onBackClick = { navController.popBackStack() },
-                onNavigateToCart = { navController.navigate(AppDestinations.CART_ROUTE) }
+                onNavigateToCart = { navController.navigate(AppDestinations.CART_ROUTE) },
+                onNavigateToProfile = {navController.navigate(AppDestinations.PROFILE_ROUTE)}
             )
         }
         composable(route = AppDestinations.CART_ROUTE) {

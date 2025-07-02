@@ -2,6 +2,7 @@ package com.example.thecodecup.ui.screens.profile
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -133,21 +134,21 @@ fun ProfileScreen(
                 icon = painterResource(id = R.drawable.ic_profile),
                 onEditClick = { onEditClick("full_name") }
             )
-            Divider()
+            HorizontalDivider()
             ProfileInfoRow(
                 label = stringResource(id = R.string.profile_label_phone_number),
                 value = userProfile.phoneNumber,
                 icon = painterResource(id = R.drawable.ic_contact_phone),
                 onEditClick = { onEditClick("phone_number") }
             )
-            Divider()
+            HorizontalDivider()
             ProfileInfoRow(
                 label = stringResource(id = R.string.profile_label_email),
                 value = userProfile.email,
                 icon = painterResource(id = R.drawable.ic_message),
                 onEditClick = { onEditClick("email") }
             )
-            Divider()
+            HorizontalDivider()
             ProfileInfoRow(
                 label = stringResource(id = R.string.profile_label_address),
                 value = userProfile.address,
