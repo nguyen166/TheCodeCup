@@ -34,12 +34,17 @@ object AppDestinations {
 
 
     const val DETAILS_ID_ARG = "coffeeId"
+    const val DETAILS_SHOT_ARG = "shot"
+    const val DETAILS_SIZE_ARG = "size"
+    const val DETAILS_ICE_ARG = "ice"
 }
 
 
 @Composable
 fun AppNavigation() {
     val navController: NavHostController = rememberNavController()
+
+
 
     NavHost(
         navController = navController,
@@ -73,7 +78,17 @@ fun AppNavigation() {
                 onProfileClick = {
                     navController.navigate(AppDestinations.PROFILE_ROUTE)
                 },
-                navController = navController
+                navController = navController,
+                onNavigateToReorder = { order ->
+                    val firstItem = order.items.firstOrNull()
+                    if (firstItem != null) {
+                        val route = "${AppDestinations.DETAILS_ROUTE}/${firstItem.coffeeId}" +
+                                "?${AppDestinations.DETAILS_SHOT_ARG}=${firstItem.shot}" +
+                                "&${AppDestinations.DETAILS_SIZE_ARG}=${firstItem.size}" +
+                                "&${AppDestinations.DETAILS_ICE_ARG}=${firstItem.ice}"
+                        navController.navigate(route)
+                    }
+                }
             )
         }
 
@@ -133,5 +148,27 @@ fun AppNavigation() {
                 onBackClick = { navController.popBackStack() }
             )
         }
+
+        composable(
+            route = "${AppDestinations.DETAILS_ROUTE}/{${AppDestinations.DETAILS_ID_ARG}}" +
+                    "?${AppDestinations.DETAILS_SHOT_ARG}={${AppDestinations.DETAILS_SHOT_ARG}}" +
+                    "&${AppDestinations.DETAILS_SIZE_ARG}={${AppDestinations.DETAILS_SIZE_ARG}}" +
+                    "&${AppDestinations.DETAILS_ICE_ARG}={${AppDestinations.DETAILS_ICE_ARG}}",
+
+            arguments = listOf(
+                navArgument(AppDestinations.DETAILS_ID_ARG) { type = NavType.IntType },
+                navArgument(AppDestinations.DETAILS_SHOT_ARG) { type = NavType.StringType; nullable = true; defaultValue = null },
+                navArgument(AppDestinations.DETAILS_SIZE_ARG) { type = NavType.StringType; nullable = true; defaultValue = null },
+                navArgument(AppDestinations.DETAILS_ICE_ARG) { type = NavType.StringType; nullable = true; defaultValue = null }
+            )
+        ) {
+            DetailsRoute(
+                onBackClick = { navController.popBackStack() },
+                onNavigateToCart = { navController.navigate(AppDestinations.CART_ROUTE) },
+                onNavigateToProfile = { navController.navigate(AppDestinations.PROFILE_ROUTE) }
+            )
+        }
     }
+
+
 }

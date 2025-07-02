@@ -22,4 +22,8 @@ class OrderRepository @Inject constructor(private val orderDao: OrderDao) {
     suspend fun updateOrder(order: Order) {
         orderDao.updateOrder(order)
     }
+
+    fun getLatestOrder(): Flow<Order?> {
+        return orderDao.getLatestOrder()
+    }
 }

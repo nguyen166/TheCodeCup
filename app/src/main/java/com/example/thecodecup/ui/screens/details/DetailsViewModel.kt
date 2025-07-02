@@ -53,15 +53,34 @@ class DetailsViewModel @Inject constructor(
     private val coffeeId: Int = checkNotNull(savedStateHandle[AppDestinations.DETAILS_ID_ARG])
 
     init {
-        loadCoffeeDetails(coffeeId)
+        val initialShot: String? = savedStateHandle[AppDestinations.DETAILS_SHOT_ARG]
+        val initialSize: String? = savedStateHandle[AppDestinations.DETAILS_SIZE_ARG]
+        val initialIce: String? = savedStateHandle[AppDestinations.DETAILS_ICE_ARG]
+
+
+
+        loadCoffeeDetails(
+            id = coffeeId,
+            initialShot = initialShot,
+            initialSize = initialSize,
+            initialIce = initialIce
+        )
     }
 
-    private fun loadCoffeeDetails(id: Int) {
+    private fun loadCoffeeDetails(
+        id: Int,
+        initialShot: String?,
+        initialSize: String?,
+        initialIce: String?
+    ) {
         val coffee = staticCoffeeList.find { it.id == id }
-        _uiState.update {
-            it.copy(
+        _uiState.update { currentState ->
+            currentState.copy(
                 coffee = coffee,
-                isLoading = false
+                isLoading = false,
+                selectedShot = initialShot ?: currentState.selectedShot,
+                selectedSize = initialSize ?: currentState.selectedSize,
+                selectedIce = initialIce ?: currentState.selectedIce
             )
         }
     }

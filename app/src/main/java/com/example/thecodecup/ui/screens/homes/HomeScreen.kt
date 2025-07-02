@@ -13,21 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thecodecup.R
 import com.example.thecodecup.ui.components.CoffeeMenuItem
 import com.example.thecodecup.ui.components.LoyaltyCard
 import com.example.thecodecup.ui.theme.AppTheme
-import com.example.thecodecup.ui.theme.TheCodeCupTheme
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
-import androidx.navigation.Navigator
 import com.example.thecodecup.data.local.model.Coffee
-import com.example.thecodecup.data.local.model.staticCoffeeList
+import com.example.thecodecup.data.local.model.Order
 import com.example.thecodecup.ui.components.AppBottomBar
+import com.example.thecodecup.ui.components.RecentOrderSuggestion
 
 
 @Composable
@@ -36,7 +34,8 @@ fun HomeScreen(
     onCoffeeClick: (Int) -> Unit,
     onCartClick: () -> Unit,
     onProfileClick: () -> Unit,
-    navController: NavController
+    navController: NavController,
+    onNavigateToReorder: (Order) -> Unit
 ) {
     // Lấy state từ ViewModel
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -45,10 +44,12 @@ fun HomeScreen(
         userName = uiState.userName,
         stamps = uiState.stamps,
         coffeeList = uiState.coffeeList,
+        latestOrder = uiState.latestOrder,
         onCoffeeClick = onCoffeeClick,
         onCartClick = onCartClick,
         onProfileClick = onProfileClick,
-        navController = navController
+        navController = navController,
+        onReorderClick = onNavigateToReorder
     )
 }
 
@@ -59,10 +60,13 @@ fun HomeScreenContent(
     userName: String,
     stamps: Int,
     coffeeList: List<Coffee>,
+    latestOrder: Order?,
     onCoffeeClick: (Int) -> Unit,
     onCartClick: () -> Unit,
     onProfileClick: () -> Unit,
-    navController: NavController
+    navController: NavController,
+    onReorderClick: (Order) -> Unit
+
 ) {
     Scaffold(
 
@@ -126,6 +130,13 @@ fun HomeScreenContent(
             ) {
                 // 1. LoyaltyCard nằm BÊN TRONG, ngay đầu tiên
                 LoyaltyCard(stamps = stamps, totalStamps = 8)
+
+                if (latestOrder != null) {
+                    RecentOrderSuggestion(
+                        latestOrder = latestOrder,
+                        onReorderClick = onReorderClick
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(24.dp))
 

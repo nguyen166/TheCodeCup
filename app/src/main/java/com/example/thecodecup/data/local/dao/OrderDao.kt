@@ -17,4 +17,8 @@ interface OrderDao {
 
     @Update
     suspend fun updateOrder(order: Order)
+
+    @Query("SELECT * FROM orders WHERE status='history' ORDER BY timestamp DESC LIMIT 1")
+    fun getLatestOrder(): Flow<Order?>
+
 }
