@@ -39,7 +39,7 @@ data class DetailsState(
     val type: String = "Cold",   // "Hot" or "Cold"
     val size: String = "L",      // "S", "M", "L"
     val ice: String = "Some",    // "None", "Some", "Full"
-    val totalPrice: Double = 3.00
+    val totalPrice: Double = 3.00,
 )
 
 @Composable

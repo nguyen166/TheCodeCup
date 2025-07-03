@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.thecodecup.R
 import com.example.thecodecup.data.local.model.UserProfile
 import com.example.thecodecup.ui.components.EditProfileDialog
+import com.example.thecodecup.ui.components.NavigationRow
 import com.example.thecodecup.ui.components.ProfileInfoRow
 import com.example.thecodecup.ui.theme.AppTheme
 import com.example.thecodecup.ui.theme.TheCodeCupTheme
@@ -25,7 +26,8 @@ import com.example.thecodecup.ui.theme.TheCodeCupTheme
 @Composable
 fun ProfileRoute(
     viewModel: ProfileViewModel = hiltViewModel(),
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onNavigateToVouchers: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var editingField by rememberSaveable { mutableStateOf<String?>(null) }
@@ -96,7 +98,8 @@ fun ProfileRoute(
                 ProfileScreen(
                     userProfile = currentProfile, // Truyền bản sao bất biến xuống
                     onBackClick = onBackClick,
-                    onEditClick = { fieldKey -> editingField = fieldKey }
+                    onEditClick = { fieldKey -> editingField = fieldKey },
+                    onNavigateToVouchers=onNavigateToVouchers
                 )
             } else {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -113,7 +116,8 @@ fun ProfileRoute(
 fun ProfileScreen(
     userProfile: UserProfile,
     onBackClick: () -> Unit,
-    onEditClick: (String) -> Unit // Truyền một field-key để biết sửa cái gì
+    onEditClick: (String) -> Unit,
+    onNavigateToVouchers: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -155,6 +159,13 @@ fun ProfileScreen(
                 icon = painterResource(id = R.drawable.ic_location_1),
                 onEditClick = { onEditClick("address") }
             )
+            HorizontalDivider()
+            NavigationRow(
+                label = "My Vouchers",
+                icon = painterResource(id = R.drawable.ic_voucher), // Cần tạo icon này
+                onClick = onNavigateToVouchers
+            )
+
         }
     }
 }
@@ -174,7 +185,8 @@ fun ProfileScreenPreview() {
         ProfileScreen(
             userProfile = mockUser,
             onBackClick = {},
-            onEditClick = {}
+            onEditClick = {},
+            onNavigateToVouchers = {}
         )
     }
 }

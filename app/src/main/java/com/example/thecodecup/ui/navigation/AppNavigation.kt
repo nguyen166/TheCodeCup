@@ -19,6 +19,7 @@ import com.example.thecodecup.ui.screens.profile.ProfileRoute
 import com.example.thecodecup.ui.screens.redeem.RedeemRoute
 import com.example.thecodecup.ui.screens.rewards.RewardsRoute
 import com.example.thecodecup.ui.screens.splash.SplashScreen
+import com.example.thecodecup.ui.screens.vouchers.MyVouchersRoute
 
 // Định nghĩa các route
 object AppDestinations {
@@ -31,6 +32,7 @@ object AppDestinations {
     const val REWARD_ROUTE = "reward"
     const val REDEEM_ROUTE = "redeem"
     const val MYORDER_ROUTE = "myorder"
+    const val VOUCHERS_ROUTE = "vouchers"
 
 
     const val DETAILS_ID_ARG = "coffeeId"
@@ -131,7 +133,10 @@ fun AppNavigation() {
 
         composable(route = AppDestinations.PROFILE_ROUTE) {
             ProfileRoute(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                onNavigateToVouchers = {
+                    navController.navigate(AppDestinations.VOUCHERS_ROUTE)
+                }
             )
         }
         composable(route = AppDestinations.REWARD_ROUTE) {
@@ -166,6 +171,11 @@ fun AppNavigation() {
                 onBackClick = { navController.popBackStack() },
                 onNavigateToCart = { navController.navigate(AppDestinations.CART_ROUTE) },
                 onNavigateToProfile = { navController.navigate(AppDestinations.PROFILE_ROUTE) }
+            )
+        }
+        composable(route = AppDestinations.VOUCHERS_ROUTE) {
+            MyVouchersRoute(
+                onBackClick = { navController.popBackStack() }
             )
         }
     }

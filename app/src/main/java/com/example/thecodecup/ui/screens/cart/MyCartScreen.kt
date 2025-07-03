@@ -24,8 +24,17 @@ import java.util.*
 import androidx.compose.runtime.getValue
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.rememberSwipeToDismissBoxState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.example.thecodecup.data.local.model.Voucher
+import androidx.compose.runtime.setValue
+import com.example.thecodecup.ui.components.VoucherCard
+import com.example.thecodecup.ui.screens.profile.ProfileViewModel
 
 private val previewCartItems = listOf(
     CartItem(1, 1, "Cappuccino", 3.0, 1, "medium", "single", "full ice", R.drawable.americano,"unknown"),
@@ -42,15 +51,13 @@ fun CartRoute(
 ) {
     // Lấy state thật từ ViewModel
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     val address = uiState.cartItems.firstOrNull()?.address ?: ""
 
 
 
     // Gọi Composable UI (stateless) với dữ liệu và sự kiện thật
     CartScreen(
-        cartItems = uiState.cartItems,
-        totalPrice = uiState.totalPrice,
+        uiState=uiState,
         onBackClick = onBackClick,
         onCheckoutClick = {
             viewModel.onCheckoutClicked(userAddress =address,onCheckoutSuccess = onNavigateToOrderSuccess)
@@ -59,21 +66,63 @@ fun CartRoute(
             viewModel.removeItem(
                 userAddress =  itemToRemove.address,
                 itemToRemove = itemToRemove,
-
-            )
-        }
+                )
+        },
+        onApplyVoucher = viewModel::applyVoucher,
+        onRemoveVoucherClick = viewModel::removeVoucher
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(
-    cartItems: List<CartItem>,
-    totalPrice: Double,
+    uiState: CartUiState,
     onBackClick: () -> Unit,
     onCheckoutClick: () -> Unit,
-    onRemoveItem: (CartItem) -> Unit
+    onRemoveItem: (CartItem) -> Unit,
+    onApplyVoucher: (Voucher) -> Unit,
+    onRemoveVoucherClick: () -> Unit
 ) {
+    val sheetState = rememberModalBottomSheetState()
+    var isVoucherSheetOpen by rememberSaveable { mutableStateOf(false) }
+
+
+    if (isVoucherSheetOpen) {
+        ModalBottomSheet(
+            onDismissRequest = { isVoucherSheetOpen = false },
+            sheetState = sheetState,
+            containerColor = AppTheme.colorScheme.surface
+        ) {
+            // Thêm một chút padding cho tiêu đề
+            Text(
+                text = "Apply a Voucher",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+            LazyColumn(
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                if (uiState.availableVouchers.isEmpty()) {
+                    item {
+                        Text(
+                            text = "You have no available vouchers.",
+                            modifier = Modifier.padding(vertical = 24.dp),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                } else {
+                    items(uiState.availableVouchers) { voucher ->
+                        VoucherCard(voucher = voucher, onClick = {
+                            onApplyVoucher(voucher)
+                            // Tự động đóng bottom sheet sau khi chọn
+                            isVoucherSheetOpen = false
+                        })
+                    }
+                }
+            }
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -98,7 +147,9 @@ fun CartScreen(
         },
         bottomBar = {
             CartBottomBar(
-                totalPrice = totalPrice,
+                subtotal = uiState.subtotal,
+                discount = uiState.discountAmount,
+                totalPrice = uiState.totalPrice,
                 onCheckoutClick = onCheckoutClick
             )
         }
@@ -111,7 +162,7 @@ fun CartScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(top = 16.dp)
         ) {
-            items(cartItems, key = { it.id }) { item ->
+            items(uiState.cartItems, key = { it.id }) { item ->
 
 
                 val dismissState = rememberSwipeToDismissBoxState(
@@ -160,12 +211,34 @@ fun CartScreen(
                     CartItemRow(item = item)
                 }
             }
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
+                HorizontalDivider(color = AppTheme.colorScheme.outline.copy(alpha = 0.5f))
+                Spacer(modifier = Modifier.height(16.dp))
+
+                if (uiState.appliedVoucher == null) {
+                    OutlinedButton(
+                        onClick = { isVoucherSheetOpen = true },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Apply Voucher")
+                    }
+                } else {
+                    AppliedVoucherInfo(
+                        voucher = uiState.appliedVoucher,
+                        onRemoveClick = onRemoveVoucherClick
+                    )
+                }
+            }
         }
     }
 }
 
+
 @Composable
 fun CartBottomBar(
+    subtotal: Double,
+    discount: Double,
     totalPrice: Double,
     onCheckoutClick: () -> Unit
 ) {
@@ -173,40 +246,61 @@ fun CartBottomBar(
         modifier = Modifier.fillMaxWidth(),
         shadowElevation = 8.dp
     ) {
-        Row(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 24.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column {
+            // Dòng Subtotal
+            PriceRow(label = "Subtotal", amount = subtotal)
+
+            // Dòng Discount (chỉ hiển thị nếu có giảm giá)
+            if (discount > 0) {
+                PriceRow(label = "Discount", amount = -discount, color = AppTheme.colorScheme.primary)
+            }
+
+            // Dòng tổng tiền cuối cùng
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = stringResource(id = R.string.cart_total_price_label),
                     style = AppTheme.typography.bodyMedium,
-                    color = AppTheme.extendedColors.textMuted
+                    color = AppTheme.extendedColors.textGrey
                 )
                 Text(
                     text = formatCurrency(totalPrice),
-                    style = AppTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = AppTheme.colorScheme.onBackground
+                    style = AppTheme.typography.headlineSmall, // Dùng size nhỏ hơn một chút
+                    fontWeight = FontWeight.Bold
                 )
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Nút Checkout
             Button(
                 onClick = onCheckoutClick,
-                shape = AppTheme.shapes.large,
-                modifier = Modifier.height(56.dp)
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                shape = AppTheme.shapes.large
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_cart_checkout),
-                    contentDescription = null,
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                )
-                Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                Text(text = stringResource(id = R.string.cart_checkout_button))
+                Icon(painterResource(id = R.drawable.ic_cart_checkout), null)
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text(stringResource(id = R.string.cart_checkout_button))
             }
         }
+    }
+}
+
+// Composable tái sử dụng cho các dòng giá
+@Composable
+private fun PriceRow(label: String, amount: Double, color: Color = MaterialTheme.colorScheme.onSurface) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = label, style = MaterialTheme.typography.bodyLarge, color = color)
+        Text(text = formatCurrency(amount), style = MaterialTheme.typography.bodyLarge, color = color)
     }
 }
 
@@ -217,16 +311,43 @@ private fun formatCurrency(price: Double): String {
     return format.format(price)
 }
 
-@Preview(showSystemUi = true)
 @Composable
-fun CartScreenPreview() {
-    TheCodeCupTheme {
-        CartScreen(
-            cartItems = previewCartItems,
-            totalPrice = previewTotalPrice,
-            onBackClick = { },
-            onCheckoutClick = { },
-            onRemoveItem = { }
-        )
+fun AppliedVoucherInfo(voucher: Voucher, onRemoveClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column {
+            Text(
+                text = "Applied Voucher",
+                style = AppTheme.typography.labelMedium,
+                color = AppTheme.colorScheme.primary
+            )
+            Text(
+                text = voucher.title,
+                style = AppTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        IconButton(onClick = onRemoveClick) {
+            Icon(Icons.Default.Close, contentDescription = "Remove Voucher")
+        }
     }
 }
+
+//@Preview(showSystemUi = true)
+//@Composable
+//fun CartScreenPreview() {
+//    TheCodeCupTheme {
+//        CartScreen(
+//            cartItems = previewCartItems,
+//            totalPrice = previewTotalPrice,
+//            onBackClick = { },
+//            onCheckoutClick = { },
+//            onRemoveItem = { }
+//        )
+//    }
+//}

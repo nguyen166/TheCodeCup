@@ -26,7 +26,7 @@ data class DetailsUiState(
     val selectedType: String = "Cold",
     val selectedSize: String = "M",
     val selectedIce: String = "Some",
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
 ) {
     // Thêm một computed property để tính giá
     val totalPrice: Double

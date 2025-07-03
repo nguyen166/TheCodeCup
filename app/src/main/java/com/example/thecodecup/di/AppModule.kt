@@ -6,6 +6,7 @@ import com.example.thecodecup.data.local.AppDatabase
 import com.example.thecodecup.data.local.dao.CartDao
 import com.example.thecodecup.data.local.dao.OrderDao
 import com.example.thecodecup.data.local.dao.UserProfileDao
+import com.example.thecodecup.data.local.dao.VoucherDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,5 +46,11 @@ object AppModule {
     fun provideUserProfileDao(appDatabase: AppDatabase): UserProfileDao {
         return appDatabase.profileDao()
     }
+
+    @Provides
+    fun provideVoucherDao(appDatabase: AppDatabase): VoucherDao {
+        return appDatabase.voucherDao()
+    }
+
 
 }
