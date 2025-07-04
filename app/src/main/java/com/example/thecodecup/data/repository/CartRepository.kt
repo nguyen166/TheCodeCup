@@ -17,6 +17,10 @@ class CartRepository @Inject constructor(private val cartDao: CartDao) {
         cartDao.insertCartItem(item)
     }
 
+    suspend fun addAllToCart(items: List<CartItem>) {
+        cartDao.insertAll(items)
+    }
+
     suspend fun removeFromCart(item: CartItem) {
         cartDao.deleteCartItem(item)
     }

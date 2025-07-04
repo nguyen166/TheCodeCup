@@ -3,6 +3,7 @@ package com.example.thecodecup.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -11,16 +12,18 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.thecodecup.ui.screens.cart.CartRoute
 import com.example.thecodecup.ui.screens.details.DetailsRoute
+import com.example.thecodecup.ui.screens.details.DetailsViewModel
 import com.example.thecodecup.ui.screens.home.HomeScreen
 import com.example.thecodecup.ui.screens.home.HomeViewModel
 import com.example.thecodecup.ui.screens.myorder.MyOrderRoute
 import com.example.thecodecup.ui.screens.ordersuccess.OrderSuccessScreen
 import com.example.thecodecup.ui.screens.profile.ProfileRoute
+import com.example.thecodecup.ui.screens.profile.ProfileViewModel
 import com.example.thecodecup.ui.screens.redeem.RedeemRoute
 import com.example.thecodecup.ui.screens.rewards.RewardsRoute
 import com.example.thecodecup.ui.screens.splash.SplashScreen
 import com.example.thecodecup.ui.screens.vouchers.MyVouchersRoute
-
+import androidx.compose.runtime.getValue
 // Định nghĩa các route
 object AppDestinations {
     const val SPLASH_ROUTE = "splash"
@@ -46,6 +49,8 @@ object AppDestinations {
 fun AppNavigation() {
     val navController: NavHostController = rememberNavController()
 
+    val profileViewModel: ProfileViewModel = hiltViewModel()
+
 
 
     NavHost(
@@ -65,6 +70,7 @@ fun AppNavigation() {
 
         // Màn hình Home
         composable(route = AppDestinations.HOME_ROUTE) {
+            val profileUiState by profileViewModel.uiState.collectAsStateWithLifecycle()
             // Lấy ViewModel bằng Hilt
             val homeViewModel: HomeViewModel = hiltViewModel()
 
@@ -82,13 +88,18 @@ fun AppNavigation() {
                 },
                 navController = navController,
                 onNavigateToReorder = { order ->
-                    val firstItem = order.items.firstOrNull()
-                    if (firstItem != null) {
-                        val route = "${AppDestinations.DETAILS_ROUTE}/${firstItem.coffeeId}" +
-                                "?${AppDestinations.DETAILS_SHOT_ARG}=${firstItem.shot}" +
-                                "&${AppDestinations.DETAILS_SIZE_ARG}=${firstItem.size}" +
-                                "&${AppDestinations.DETAILS_ICE_ARG}=${firstItem.ice}"
-                        navController.navigate(route)
+                    val address = profileUiState.userProfile?.address ?: ""
+                    if (address.isBlank() || address.equals("unknown", ignoreCase = true)) {
+                        navController.navigate(AppDestinations.PROFILE_ROUTE)
+                    } else {
+                        homeViewModel.reorderFromOrder(
+                            order = order,
+                            userAddress = address,
+                            onCartSuccess = {
+                                // Sau khi thêm thành công, điều hướng đến giỏ hàng
+                                navController.navigate(AppDestinations.CART_ROUTE)
+                            }
+                        )
                     }
                 }
             )
@@ -154,25 +165,6 @@ fun AppNavigation() {
             )
         }
 
-        composable(
-            route = "${AppDestinations.DETAILS_ROUTE}/{${AppDestinations.DETAILS_ID_ARG}}" +
-                    "?${AppDestinations.DETAILS_SHOT_ARG}={${AppDestinations.DETAILS_SHOT_ARG}}" +
-                    "&${AppDestinations.DETAILS_SIZE_ARG}={${AppDestinations.DETAILS_SIZE_ARG}}" +
-                    "&${AppDestinations.DETAILS_ICE_ARG}={${AppDestinations.DETAILS_ICE_ARG}}",
-
-            arguments = listOf(
-                navArgument(AppDestinations.DETAILS_ID_ARG) { type = NavType.IntType },
-                navArgument(AppDestinations.DETAILS_SHOT_ARG) { type = NavType.StringType; nullable = true; defaultValue = null },
-                navArgument(AppDestinations.DETAILS_SIZE_ARG) { type = NavType.StringType; nullable = true; defaultValue = null },
-                navArgument(AppDestinations.DETAILS_ICE_ARG) { type = NavType.StringType; nullable = true; defaultValue = null }
-            )
-        ) {
-            DetailsRoute(
-                onBackClick = { navController.popBackStack() },
-                onNavigateToCart = { navController.navigate(AppDestinations.CART_ROUTE) },
-                onNavigateToProfile = { navController.navigate(AppDestinations.PROFILE_ROUTE) }
-            )
-        }
         composable(route = AppDestinations.VOUCHERS_ROUTE) {
             MyVouchersRoute(
                 onBackClick = { navController.popBackStack() }

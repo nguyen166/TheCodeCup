@@ -24,16 +24,19 @@ import androidx.compose.runtime.getValue
 // Đây cũng là một UI Model, không cần lưu vào CSDL
 data class RedeemableItem(
     val id: Int,
+    val type: RedeemType, // <-- THÊM TRƯỜNG TYPE
     val name: String,
+    val description: String? = null, // Thêm mô tả cho voucher
     val imageRes: Int,
-    val validUntil: String,
     val pointsCost: Int
 )
 
 private val previewRedeemableItems = listOf(
-    RedeemableItem(1, "Cafe Latte", R.drawable.americano, "04.07.21", 1340),
-    RedeemableItem(2, "Flat White", R.drawable.flatwhite, "04.07.21", 1340),
-    RedeemableItem(3, "Cappuccino", R.drawable.capuchino, "04.07.21", 1340)
+    RedeemableItem(1, RedeemType.DRINK, "Cafe Latte", imageRes = R.drawable.americano, pointsCost = 1340),
+    RedeemableItem(2,RedeemType.DRINK ,"Flat White", imageRes = R.drawable.flatwhite, pointsCost = 1340),
+    RedeemableItem(3, RedeemType.DRINK,"Cappuccino", imageRes = R.drawable.capuchino, pointsCost = 1340),
+    RedeemableItem(4, RedeemType.VOUCHER, "15% OFF Voucher", description = "For your next order", imageRes = R.drawable.ic_voucher, pointsCost = 1000),
+    RedeemableItem(5, RedeemType.VOUCHER, "$1 OFF OFF Voucher", description = "For your next order", imageRes = R.drawable.ic_voucher, pointsCost = 1200)
 )
 
 @Composable
@@ -47,10 +50,9 @@ fun RedeemRoute(
     RedeemScreen(
         items = uiState.items,
         onRedeemClick = { itemId ->
-            viewModel.redeemItem(itemId) { isSuccess ->
+            viewModel.redeemItem(itemId) { isSuccess,message ->
                 if (isSuccess) {
                     Toast.makeText(context, "Redeemed successfully!", Toast.LENGTH_SHORT).show()
-                    onBackClick() // Quay lại màn hình Rewards
                 } else {
                     Toast.makeText(context, "Not enough points!", Toast.LENGTH_SHORT).show()
                 }
@@ -98,7 +100,7 @@ fun RedeemScreen(
                 RedeemItemRow(
                     imageRes = item.imageRes,
                     name = item.name,
-                    validUntil = item.validUntil,
+                    description = item.description,
                     pointsCost = item.pointsCost,
                     onRedeemClick = { onRedeemClick(item.id) }
                 )

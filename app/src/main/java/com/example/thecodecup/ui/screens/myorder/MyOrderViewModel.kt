@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.coroutines.launch
 
 data class MyOrdersUiState(
     val ongoingOrders: List<Order> = emptyList(),
@@ -36,6 +37,16 @@ class MyOrdersViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = MyOrdersUiState()
     )
+
+
+    fun moveToHistory(order: Order) {
+        if (order.status == "ongoing") {
+            viewModelScope.launch {
+                val updatedOrder = order.copy(status = "history")
+                orderRepository.updateOrder(updatedOrder)
+                }
+            }
+        }
 }
 
 

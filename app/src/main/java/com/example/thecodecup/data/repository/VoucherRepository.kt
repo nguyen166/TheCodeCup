@@ -21,7 +21,7 @@ class VoucherRepository @Inject constructor(
         voucherDao.updateVoucher(voucher)
     }
 
-    suspend fun insertVouchers(voucher: Voucher) {
+    suspend fun insertVoucher(voucher: Voucher) {
         voucherDao.insertVoucher(voucher)
     }
 

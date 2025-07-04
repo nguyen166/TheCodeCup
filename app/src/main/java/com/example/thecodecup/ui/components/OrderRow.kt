@@ -1,5 +1,6 @@
 package com.example.thecodecup.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -31,7 +32,7 @@ fun OrderRow(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp)
+            .padding(vertical = 16.dp).background( AppTheme.colorScheme.surface )
     ) {
         // Hàng trên: Ngày tháng và Giá tiền
         Row(

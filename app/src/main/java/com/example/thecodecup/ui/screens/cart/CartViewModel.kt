@@ -84,43 +84,6 @@ class CartViewModel @Inject constructor(
         initialValue = CartUiState() // Trạng thái ban đầu
     )
 
-//    init {
-//        // Combine flow của giỏ hàng và voucher đang được chọn
-//        viewModelScope.launch {
-//            cartRepository.getCartItems().collect { items ->
-//                // Khi giỏ hàng thay đổi, tính toán lại tất cả
-//                calculateTotals()
-//            }
-//        }
-//    }
-
-//    private fun calculateTotals() {
-//        _uiState.update { currentState ->
-//            val items = currentState.cartItems
-//            val voucher = currentState.appliedVoucher
-//
-//            val subtotal = items.sumOf { it.price * it.quantity }
-//            var discount = 0.0
-//
-//            if (voucher != null && subtotal >= voucher.minOrderValue) {
-//                discount = when (voucher.discountType) {
-//                    "PERCENTAGE" -> subtotal * (voucher.discountValue / 100.0)
-//                    "FIXED_AMOUNT" -> voucher.discountValue
-//                    else -> 0.0
-//                }
-//            }
-//
-//            // Đảm bảo không giảm giá nhiều hơn tổng tiền
-//            val finalDiscount = discount.coerceAtMost(subtotal)
-//            val totalPrice = subtotal - finalDiscount
-//
-//            currentState.copy(
-//                subtotal = subtotal,
-//                discountAmount = finalDiscount,
-//                totalPrice = totalPrice
-//            )
-//        }
-//    }
 
     fun applyVoucher(voucher: Voucher) {
         _appliedVoucher.value = voucher
@@ -131,64 +94,12 @@ class CartViewModel @Inject constructor(
     }
 
 
-//    // 2. LẤY DỮ LIỆU KHI VIEWMODEL ĐƯỢC KHỞI TẠO
-//    init {
-//        // Khởi chạy một coroutine trong `viewModelScope`.
-//        // Coroutine này sẽ tự động bị hủy khi ViewModel bị hủy, tránh rò rỉ bộ nhớ.
-//        viewModelScope.launch {
-//            // `getCartItems()` từ Repository trả về một Flow.
-//            cartRepository.getCartItems().collect { items ->
-//                // Mỗi khi dữ liệu trong bảng 'cart_items' của Room thay đổi,
-//                // Flow sẽ phát ra một danh sách `items` mới và khối code này sẽ chạy.
-//                _uiState.update { currentState ->
-//                    // `update` là cách an toàn để thay đổi giá trị của MutableStateFlow.
-//                    currentState.copy(
-//                        cartItems = items,
-//                        // Tính tổng giá tiền mỗi khi danh sách cập nhật.
-//                        totalPrice = items.sumOf { it.price }
-//                    )
-//                }
-//            }
-//        }
-//    }
 
     fun removeItem(userAddress: String,itemToRemove: CartItem) {
         viewModelScope.launch {
-            // 1. Chuyển đổi CartItem thành một Order đã bị hủy
-            val cancelledOrder = convertCartItemToCancelledOrder(userAddress,itemToRemove)
 
-            // 2. Lưu đơn hàng đã hủy này vào lịch sử
-            orderRepository.insertOrder(cancelledOrder)
-
-            // 3. Xóa item khỏi giỏ hàng hiện tại
             cartRepository.removeFromCart(itemToRemove)
         }
-    }
-
-    private fun convertCartItemToCancelledOrder(userAddress: String,cartItem: CartItem): Order {
-        // Chuyển đổi thành một OrderItem duy nhất
-        val orderItem = OrderItem(
-            coffeeId = cartItem.coffeeId,
-            name = cartItem.name,
-            quantity = cartItem.quantity,
-            size = cartItem.size,
-            shot = cartItem.shot,
-            ice = cartItem.ice,
-            pricePerItem = cartItem.price / cartItem.quantity
-        )
-
-        // Chuyển danh sách (chỉ có 1 item) thành chuỗi JSON
-        val itemsJsonString = Json.encodeToString(listOf(orderItem))
-
-        return Order(
-            // id sẽ tự động được tạo
-            totalPrice = cartItem.price,
-            timestamp = System.currentTimeMillis(),
-            status = "history",
-            itemsJson = itemsJsonString,
-            pointsAwarded = 0, // Không có điểm cho đơn hàng bị hủy,
-            address = if (userAddress.isNotBlank()) userAddress else "N/A"
-        )
     }
 
     fun onCheckoutClicked(userAddress: String,onCheckoutSuccess: () -> Unit) {

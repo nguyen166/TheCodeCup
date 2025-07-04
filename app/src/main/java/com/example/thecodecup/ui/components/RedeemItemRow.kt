@@ -25,7 +25,7 @@ import com.example.thecodecup.ui.theme.TheCodeCupTheme
 fun RedeemItemRow(
     @DrawableRes imageRes: Int,
     name: String,
-    validUntil: String,
+    description: String?,
     pointsCost: Int,
     onRedeemClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -53,11 +53,14 @@ fun RedeemItemRow(
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = stringResource(id = R.string.redeem_valid_until_format, validUntil),
-                    style = AppTheme.typography.bodySmall,
-                    color = AppTheme.extendedColors.textMuted
-                )
+                if (!description.isNullOrBlank()) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = description,
+                        style = AppTheme.typography.bodySmall,
+                        color = AppTheme.extendedColors.textMuted
+                    )
+                }
             }
         }
 
@@ -67,7 +70,8 @@ fun RedeemItemRow(
             colors = ButtonDefaults.buttonColors(
                 containerColor = AppTheme.colorScheme.primary,
                 contentColor = AppTheme.colorScheme.onPrimary
-            )
+            ),
+            modifier = Modifier.defaultMinSize(minWidth = 90.dp)
         ) {
             Text(text = stringResource(id = R.string.redeem_points_cost_format, pointsCost))
         }
@@ -81,8 +85,22 @@ fun RedeemItemRowPreview() {
         RedeemItemRow(
             imageRes = R.drawable.americano,
             name = "Cafe Latte",
-            validUntil = "04.07.21",
+            description = null,
             pointsCost = 1340,
+            onRedeemClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Redeem Voucher Item")
+@Composable
+fun RedeemItemRow_Voucher_Preview() {
+    TheCodeCupTheme {
+        RedeemItemRow(
+            imageRes = R.drawable.ic_voucher, // Dùng icon voucher
+            name = "15% OFF Voucher",
+            description = "For your next order", // Voucher có mô tả
+            pointsCost = 2000,
             onRedeemClick = {}
         )
     }

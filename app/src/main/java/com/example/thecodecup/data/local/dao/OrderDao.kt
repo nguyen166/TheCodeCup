@@ -20,5 +20,4 @@ interface OrderDao {
 
     @Query("SELECT * FROM orders WHERE status='history' ORDER BY timestamp DESC LIMIT 1")
     fun getLatestOrder(): Flow<Order?>
-
 }

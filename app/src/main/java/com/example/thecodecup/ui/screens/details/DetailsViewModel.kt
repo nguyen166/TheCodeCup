@@ -3,9 +3,11 @@ package com.example.thecodecup.ui.screens.details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thecodecup.R
 import com.example.thecodecup.data.local.model.CartItem
 import com.example.thecodecup.data.repository.CartRepository
 import com.example.thecodecup.data.local.model.Coffee
+import com.example.thecodecup.data.local.model.Order
 import com.example.thecodecup.data.local.model.staticCoffeeList
 import com.example.thecodecup.ui.navigation.AppDestinations
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -53,34 +55,20 @@ class DetailsViewModel @Inject constructor(
     private val coffeeId: Int = checkNotNull(savedStateHandle[AppDestinations.DETAILS_ID_ARG])
 
     init {
-        val initialShot: String? = savedStateHandle[AppDestinations.DETAILS_SHOT_ARG]
-        val initialSize: String? = savedStateHandle[AppDestinations.DETAILS_SIZE_ARG]
-        val initialIce: String? = savedStateHandle[AppDestinations.DETAILS_ICE_ARG]
-
-
 
         loadCoffeeDetails(
-            id = coffeeId,
-            initialShot = initialShot,
-            initialSize = initialSize,
-            initialIce = initialIce
+            id = coffeeId
         )
     }
 
     private fun loadCoffeeDetails(
-        id: Int,
-        initialShot: String?,
-        initialSize: String?,
-        initialIce: String?
+        id: Int
     ) {
         val coffee = staticCoffeeList.find { it.id == id }
         _uiState.update { currentState ->
             currentState.copy(
                 coffee = coffee,
                 isLoading = false,
-                selectedShot = initialShot ?: currentState.selectedShot,
-                selectedSize = initialSize ?: currentState.selectedSize,
-                selectedIce = initialIce ?: currentState.selectedIce
             )
         }
     }
