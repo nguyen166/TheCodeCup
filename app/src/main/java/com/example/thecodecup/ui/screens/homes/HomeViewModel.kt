@@ -51,13 +51,12 @@ class HomeViewModel @Inject constructor(
                 CartItem(
                     coffeeId = orderItem.coffeeId,
                     name = orderItem.name,
-
+                    type = orderItem.type,
                     price = orderItem.pricePerItem*orderItem.quantity,
                     quantity = orderItem.quantity,
                     size = orderItem.size,
                     shot = orderItem.shot,
-                    ice = orderItem.ice,
-                    // Cần có cách để lấy imageRes. Có thể phải tra cứu từ CoffeeRepository
+                    ice = orderItem.type,
                     imageResId = findImageResForCoffee(orderItem.coffeeId),
                     address = userAddress
                 )

@@ -31,6 +31,7 @@ data class Order(
 data class OrderItem(
     val coffeeId: Int,
     val name: String,
+    val type: String,
     val quantity: Int,
     val size: String,
     val shot: String,

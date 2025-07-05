@@ -2,6 +2,7 @@ package com.example.thecodecup.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,6 +36,6 @@ fun OptionRow(
                 content = optionContent
             )
         }
-        Divider(color = AppTheme.colorScheme.outline.copy(alpha = 0.5f))
+        HorizontalDivider(color = AppTheme.colorScheme.outline.copy(alpha = 0.5f))
     }
 }

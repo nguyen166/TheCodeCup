@@ -112,6 +112,7 @@ class CartViewModel @Inject constructor(
                 OrderItem(
                     coffeeId = cartItem.coffeeId,
                     name = cartItem.name,
+                    type=cartItem.type,
                     quantity = cartItem.quantity,
                     size = cartItem.size,
                     shot = cartItem.shot,

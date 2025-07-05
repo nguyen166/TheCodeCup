@@ -9,6 +9,7 @@ data class CartItem(
     val id: Int = 0,
     val coffeeId: Int,
     val name: String,
+    val type: String,
     val price: Double,
     val quantity: Int,
     val size: String, // "S", "M", "L"

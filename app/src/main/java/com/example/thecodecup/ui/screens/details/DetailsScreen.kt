@@ -112,7 +112,7 @@ fun DetailsRoute(
             shot = uiState.selectedShot,
             type = uiState.selectedType,
             size = uiState.selectedSize,
-            ice = uiState.selectedIce,
+            ice = uiState.selectedIce?:"Not",
             totalPrice = uiState.totalPrice
         )
 
@@ -255,12 +255,32 @@ fun DetailsScreen(
                 SelectableIconButton(iconRes = R.drawable.ic_size, contentDescription = "Size M", isSelected = state.size == "M", onClick = { onSizeChange("M")},iconModifier = Modifier.size(18.dp) )
                 SelectableIconButton(iconRes = R.drawable.ic_size, contentDescription = "Size L", isSelected = state.size == "L", onClick = { onSizeChange("L")},iconModifier = Modifier.size(32.dp)  )
             }
-
-            OptionRow(title = stringResource(id = R.string.details_option_ice)) {
-                SelectableIconButton(iconRes = R.drawable.ic_ice1, contentDescription = "No Ice", isSelected = state.ice == "None", onClick = { onIceChange("None") },iconModifier = Modifier.size(16.dp))
-                SelectableIconButton(iconRes = R.drawable.ic_ice2, contentDescription = "Some Ice", isSelected = state.ice == "Some", onClick = { onIceChange("Some") },iconModifier = Modifier.size(48.dp))
-                SelectableIconButton(iconRes = R.drawable.ic_ice3, contentDescription = "Full Ice", isSelected = state.ice == "Full", onClick = { onIceChange("Full") },iconModifier = Modifier.size(72.dp))
+            if(state.type=="Cold") {
+                OptionRow(title = stringResource(id = R.string.details_option_ice)) {
+                    SelectableIconButton(
+                        iconRes = R.drawable.ic_ice1,
+                        contentDescription = "No Ice",
+                        isSelected = state.ice == "None",
+                        onClick = { onIceChange("None") },
+                        iconModifier = Modifier.size(16.dp)
+                    )
+                    SelectableIconButton(
+                        iconRes = R.drawable.ic_ice2,
+                        contentDescription = "Some Ice",
+                        isSelected = state.ice == "Some",
+                        onClick = { onIceChange("Some") },
+                        iconModifier = Modifier.size(48.dp)
+                    )
+                    SelectableIconButton(
+                        iconRes = R.drawable.ic_ice3,
+                        contentDescription = "Full Ice",
+                        isSelected = state.ice == "Full",
+                        onClick = { onIceChange("Full") },
+                        iconModifier = Modifier.size(72.dp)
+                    )
+                }
             }
+
         }
     }
 }

@@ -37,9 +37,9 @@ import com.example.thecodecup.ui.components.VoucherCard
 import com.example.thecodecup.ui.screens.profile.ProfileViewModel
 
 private val previewCartItems = listOf(
-    CartItem(1, 1, "Cappuccino", 3.0, 1, "medium", "single", "full ice", R.drawable.americano,"unknown"),
-    CartItem(2, 1, "Cappuccino", 3.0, 1, "medium", "single", "full ice", R.drawable.capuchino,"unknown"),
-    CartItem(3, 1, "Cappuccino", 3.0, 1, "medium", "single", "full ice", R.drawable.flatwhite,"unknown")
+    CartItem(1, 1, "Cappuccino","Cold", 3.0, 1, "medium", "single", "full ice", R.drawable.americano,"unknown"),
+    CartItem(2, 1, "Cappuccino","Cold", 3.0, 1, "medium", "single", "full ice", R.drawable.capuchino,"unknown"),
+    CartItem(3, 1, "Cappuccino","Cold", 3.0, 1, "medium", "single", "full ice", R.drawable.flatwhite,"unknown")
 )
 private val previewTotalPrice = 9.0
 

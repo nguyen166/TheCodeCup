@@ -27,7 +27,7 @@ data class DetailsUiState(
     val selectedShot: String = "Single",
     val selectedType: String = "Cold",
     val selectedSize: String = "M",
-    val selectedIce: String = "Some",
+    val selectedIce: String? = null,
     val isLoading: Boolean = true,
 ) {
     // Thêm một computed property để tính giá
@@ -104,11 +104,12 @@ class DetailsViewModel @Inject constructor(
         val cartItem = CartItem(
             coffeeId = coffee.id,
             name = coffee.name,
+            type = currentState.selectedType,
             price = currentState.totalPrice,
             quantity = currentState.quantity,
             size = currentState.selectedSize,
             shot = currentState.selectedShot,
-            ice = currentState.selectedIce,
+            ice = currentState.selectedIce?:"Not",
             imageResId = coffee.imageRes,
             address = userAddress
         )

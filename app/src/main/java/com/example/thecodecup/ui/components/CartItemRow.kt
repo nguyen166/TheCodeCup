@@ -98,7 +98,7 @@ private fun formatCurrency(price: Double): String {
 @Composable
 fun CartItemRowPreview() {
     TheCodeCupTheme {
-        val previewItem = CartItem(1, 1, "Cappuccino", 3.0, 1, "medium", "single", "full ice", R.drawable.capuchino,"unknown")
+        val previewItem = CartItem(1, 1, "Cappuccino", "Cold",3.0, 1, "medium", "single", "full ice", R.drawable.capuchino,"unknown")
         CartItemRow(item = previewItem)
     }
 }
