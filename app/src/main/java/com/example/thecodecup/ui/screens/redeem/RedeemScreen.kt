@@ -28,15 +28,16 @@ data class RedeemableItem(
     val name: String,
     val description: String? = null, // Thêm mô tả cho voucher
     val imageRes: Int,
-    val pointsCost: Int
+    val pointsCost: Int,
+    val redeemValue: Double?=null
 )
 
 private val previewRedeemableItems = listOf(
     RedeemableItem(1, RedeemType.DRINK, "Cafe Latte", imageRes = R.drawable.americano, pointsCost = 1340),
     RedeemableItem(2,RedeemType.DRINK ,"Flat White", imageRes = R.drawable.flatwhite, pointsCost = 1340),
     RedeemableItem(3, RedeemType.DRINK,"Cappuccino", imageRes = R.drawable.capuchino, pointsCost = 1340),
-    RedeemableItem(4, RedeemType.VOUCHER, "15% OFF Voucher", description = "For your next order", imageRes = R.drawable.ic_voucher, pointsCost = 1000),
-    RedeemableItem(5, RedeemType.VOUCHER, "$1 OFF OFF Voucher", description = "For your next order", imageRes = R.drawable.ic_voucher, pointsCost = 1200)
+    RedeemableItem(4, RedeemType.VOUCHERPERCEN, "15% OFF Voucher", description = "For your next order", imageRes = R.drawable.ic_voucher, pointsCost = 1000),
+    RedeemableItem(5, RedeemType.VOUCHERFIXED, "$1 OFF OFF Voucher", description = "For your next order", imageRes = R.drawable.ic_voucher, pointsCost = 1200)
 )
 
 @Composable

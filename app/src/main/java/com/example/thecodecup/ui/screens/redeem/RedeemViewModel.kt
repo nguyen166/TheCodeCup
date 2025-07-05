@@ -19,7 +19,7 @@ data class RedeemUiState(
     val items: List<RedeemableItem> = emptyList()
 )
 
-enum class RedeemType { DRINK, VOUCHER }
+enum class RedeemType { DRINK, VOUCHERPERCEN, VOUCHERFIXED }
 
 // Dữ liệu giả cho các vật phẩm
 // Có thể đặt trong một file model riêng nếu muốn
@@ -27,8 +27,8 @@ private val staticRedeemableItems = listOf(
     RedeemableItem(1, RedeemType.DRINK, "Cafe Latte", imageRes = R.drawable.americano, pointsCost = 1340),
     RedeemableItem(2,RedeemType.DRINK ,"Flat White", imageRes = R.drawable.flatwhite, pointsCost = 1340),
     RedeemableItem(3, RedeemType.DRINK,"Cappuccino", imageRes = R.drawable.capuchino, pointsCost = 1340),
-    RedeemableItem(4, RedeemType.VOUCHER, "15% OFF Voucher", description = "For your next order", imageRes = R.drawable.ic_voucher, pointsCost = 1000),
-    RedeemableItem(5, RedeemType.VOUCHER, "$1 OFF OFF Voucher", description = "For your next order", imageRes = R.drawable.ic_voucher, pointsCost = 1200)
+    RedeemableItem(4, RedeemType.VOUCHERPERCEN, "15% OFF Voucher", description = "For your next order", imageRes = R.drawable.ic_voucher, pointsCost = 1000, redeemValue = 15.00),
+    RedeemableItem(5, RedeemType.VOUCHERFIXED, "$1 OFF Voucher", description = "For your next order", imageRes = R.drawable.ic_voucher, pointsCost = 1200, redeemValue = 1.00)
 )
 
 @HiltViewModel
@@ -69,12 +69,23 @@ class RedeemViewModel @Inject constructor(
                     println("Redeemed drink: ${itemToRedeem.name}")
                     onResult(true, "Redeemed ${itemToRedeem.name} successfully!")
                 }
-                RedeemType.VOUCHER -> {
+                RedeemType.VOUCHERPERCEN -> {
                     val newVoucher = Voucher(
                         title = itemToRedeem.name,
                         description = itemToRedeem.description ?: "Enjoy your discount!",
-                        discountType = "PERCENTAGE", // Hoặc dựa trên thông tin từ itemToRedeem
-                        discountValue = 15.0,
+                        discountType = "PERCENTAGE",
+                        discountValue = itemToRedeem.redeemValue?:0.00,
+                        minOrderValue = 0.0
+                    )
+                    voucherRepository.insertVoucher(newVoucher)
+                    onResult(true, "Voucher added to your wallet!")
+                }
+                RedeemType.VOUCHERFIXED -> {
+                    val newVoucher = Voucher(
+                        title = itemToRedeem.name,
+                        description = itemToRedeem.description ?: "Enjoy your discount!",
+                        discountType = "FIXED_AMOUNT",
+                        discountValue = itemToRedeem.redeemValue?:0.00,
                         minOrderValue = 0.0
                     )
                     voucherRepository.insertVoucher(newVoucher)

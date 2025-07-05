@@ -55,7 +55,7 @@ class CartViewModel @Inject constructor(
         _appliedVoucher // Lắng nghe cả sự thay đổi của voucher đang áp dụng
     ) { cartItems, availableVouchers, appliedVoucher ->
         // Logic tính toán sẽ chạy mỗi khi cartItems hoặc appliedVoucher thay đổi
-        val subtotal = cartItems.sumOf { it.price * it.quantity }
+        val subtotal = cartItems.sumOf { it.price }
         var discount = 0.0
 
         if (appliedVoucher != null && subtotal >= appliedVoucher.minOrderValue) {
