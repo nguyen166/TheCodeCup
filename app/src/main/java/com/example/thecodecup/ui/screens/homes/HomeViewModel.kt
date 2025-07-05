@@ -52,7 +52,7 @@ class HomeViewModel @Inject constructor(
                     coffeeId = orderItem.coffeeId,
                     name = orderItem.name,
 
-                    price = orderItem.pricePerItem,
+                    price = orderItem.pricePerItem*orderItem.quantity,
                     quantity = orderItem.quantity,
                     size = orderItem.size,
                     shot = orderItem.shot,

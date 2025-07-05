@@ -39,7 +39,7 @@ data class DetailsUiState(
             var finalPrice = coffee.basePrice
             if (selectedSize == "L") finalPrice += 0.3 else if (selectedSize == "S") finalPrice -= 0.5
             if (selectedShot == "Double") finalPrice += 0.5
-            return finalPrice * quantity
+            return finalPrice*quantity
         }
 }
 
