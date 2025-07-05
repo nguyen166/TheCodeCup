@@ -56,7 +56,7 @@ class HomeViewModel @Inject constructor(
                     quantity = orderItem.quantity,
                     size = orderItem.size,
                     shot = orderItem.shot,
-                    ice = orderItem.type,
+                    ice = orderItem.ice,
                     imageResId = findImageResForCoffee(orderItem.coffeeId),
                     address = userAddress
                 )
