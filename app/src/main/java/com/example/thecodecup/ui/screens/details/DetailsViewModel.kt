@@ -109,7 +109,7 @@ class DetailsViewModel @Inject constructor(
             quantity = currentState.quantity,
             size = currentState.selectedSize,
             shot = currentState.selectedShot,
-            ice = currentState.selectedIce?:"Not",
+            ice = if (currentState.selectedType == "Hot") "Not" else (currentState.selectedIce ?: "Some"),
             imageResId = coffee.imageRes,
             address = userAddress
         )

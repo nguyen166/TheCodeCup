@@ -112,7 +112,7 @@ fun DetailsRoute(
             shot = uiState.selectedShot,
             type = uiState.selectedType,
             size = uiState.selectedSize,
-            ice = uiState.selectedIce?:"Not",
+            ice = if (uiState.selectedType == "Hot") "Not" else (uiState.selectedIce ?: "Some"),
             totalPrice = uiState.totalPrice
         )
 
